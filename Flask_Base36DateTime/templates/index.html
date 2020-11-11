@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>DateTime Base36 Transform</h3>
+
+<label>輸入日期</label>
+<input id="datetime_input" type="date" />
+<p style="display: inline-block;margin-left: 10px" id="datetime_input_text"></p>
+<p>或</p>
+<label>輸入Base36日期</label>
+<input id="base36_code_input" type="text" />
+<br>
+<br>
+<button onclick="datatransform()">轉換!</button>
+</body>
+<script>
+
+    document.getElementById("datetime_input").addEventListener("change",
+        function (){
+        document.getElementById("base36_code_input").value = "";
+        document.getElementById("datetime_input_text").innerHTML = document.getElementById("datetime_input").value;
+    });
+
+    document.getElementById("base36_code_input").addEventListener("keyup",
+        function (){
+        document.getElementById("datetime_input").value = "";
+            document.getElementById("datetime_input_text").innerHTML = "";
+    });
+
+    function datatransform() {
+        const datetime_input = document.getElementById("datetime_input").value;
+        const base36_code_input = document.getElementById("base36_code_input").value;
+        const data = {
+            datetime_input,
+            base36_code_input
+        };
+        console.log(data);
+        fetch("{{ url_for('test_fetch') }}", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers:{'content-type': 'application/json'}
+        }).then(res => {
+            console.log(res)
+            return res.json();
+        }).then(result => {
+            document.getElementById("datetime_input").value = result["datetime_input"]
+            document.getElementById("datetime_input_text").innerHTML = result["datetime_input"]
+            document.getElementById("base36_code_input").value = result["base36_code_input"]
+        });
+    }
+</script>
+
+</html>
